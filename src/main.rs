@@ -1,9 +1,11 @@
 use biliroaming_rust_server::mods::get_bili_res::{get_playurl, get_search,get_season};
-use biliroaming_rust_server::mods::types::BiliConfig;
+use biliroaming_rust_server::mods::types::{BiliConfig,RequestPlayurl};
 use deadpool_redis::{Config, Runtime};
 use actix_web::{get, App, HttpResponse, HttpServer, Responder, HttpRequest};
 use std::fs::{File, self};
 use serde_json;
+use std::thread;
+use crossbeam_channel::unbounded;
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -64,11 +66,16 @@ async fn main() -> std::io::Result<()> {
     let config: BiliConfig = serde_json::from_reader(config_file).unwrap();
     let woker_num = config.woker_num;
     let port = config.port.clone();
+    let (tx, rx):(crossbeam_channel::Sender<RequestPlayurl>, crossbeam_channel::Receiver<RequestPlayurl>) = unbounded();
+    thread::spawn(move || {
+        let received = rx.recv().unwrap();
+    
+    });
     HttpServer::new(move || {
         let rediscfg = Config::from_url(&config.redis);
         let pool = rediscfg.create_pool(Some(Runtime::Tokio1)).unwrap();
         App::new()
-            .app_data((pool,config.clone()))
+            .app_data((pool,config.clone(), tx.clone()))
             .service(hello)
             .service(zhplayurl_app)
             .service(zhplayurl_web)
