@@ -1,4 +1,4 @@
-# BiliRoaming-Rust-Server
+# BiliRoaming-Rust-Server fix wanted
 ## [Features]
 
 * /pgc/player/api/playurl?
@@ -11,6 +11,7 @@
 * /intl/gateway/v2/ogv/view/app/season?
 * /x/intl/passport-login/oauth2/refresh_token?
 * local black&white list
+* more bugs
 
 ## [TODO] 带有删除线的api不知道哪里会用到（
 
