@@ -1,4 +1,8 @@
 # BiliRoaming-Rust-Server fix wanted
+
+## [bugs]
+* get_bili_res:15 
+
 ## [Features]
 
 * /pgc/player/api/playurl?
